@@ -1,0 +1,10 @@
+C:\Uni\ТИ\Laba1\Code\Ciphers\bin\Release\Ciphers.exe.config
+C:\Uni\ТИ\Laba1\Code\Ciphers\bin\Release\Ciphers.exe
+C:\Uni\ТИ\Laba1\Code\Ciphers\bin\Release\Ciphers.pdb
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.csproj.AssemblyReference.cache
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.Form1.resources
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.Properties.Resources.resources
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.csproj.GenerateResource.cache
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.csproj.CoreCompileInputs.cache
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.exe
+C:\Uni\ТИ\Laba1\Code\Ciphers\obj\Release\Ciphers.pdb
