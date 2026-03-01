@@ -15,39 +15,16 @@ namespace Ciphers
             'Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
         };
 
-        // Таблица Виженера 33x33
-        private static char[,] _vigenereTable;
+        private const int AlphabetSize = 33;
 
-        // Для быстрого поиска индекса буквы
-        private static Dictionary<char, int> _alphabetIndex;
+        // Словарь для быстрого получения индекса буквы
+        private static readonly Dictionary<char, int> _alphabetIndex;
 
         static VigenereCipher()
         {
-            CreateVigenereTable();
-        }
-
-        /// <summary>
-        /// Создает таблицу Виженера 33x33
-        /// </summary>
-        private static void CreateVigenereTable()
-        {
-            int size = RussianAlphabet.Length;
-            _vigenereTable = new char[size, size];
             _alphabetIndex = new Dictionary<char, int>();
-
-            for (int i = 0; i < size; i++)
-            {
+            for (int i = 0; i < AlphabetSize; i++)
                 _alphabetIndex[RussianAlphabet[i]] = i;
-            }
-
-            for (int row = 0; row < size; row++)
-            {
-                for (int col = 0; col < size; col++)
-                {
-                    int encryptedIndex = (col + row) % size;
-                    _vigenereTable[row, col] = RussianAlphabet[encryptedIndex];
-                }
-            }
         }
 
         /// <summary>
@@ -55,8 +32,7 @@ namespace Ciphers
         /// </summary>
         private static bool IsRussianLetter(char c)
         {
-            char upper = char.ToUpper(c);
-            return _alphabetIndex.ContainsKey(upper);
+            return _alphabetIndex.ContainsKey(char.ToUpper(c));
         }
 
         /// <summary>
@@ -72,15 +48,18 @@ namespace Ciphers
             {
                 char upper = char.ToUpper(c);
                 if (_alphabetIndex.ContainsKey(upper))
-                {
                     result.Append(upper);
-                }
             }
             return result.ToString();
         }
 
         /// <summary>
-        /// Шифрование методом Виженера с прямым (повторяющимся) ключом
+        /// Шифрование методом Виженера с прямым ключом.
+        /// Формула: C = (P + K) mod N
+        ///   P — индекс буквы открытого текста
+        ///   K — индекс буквы ключа
+        ///   N — размер алфавита (33)
+        ///   C — индекс зашифрованной буквы
         /// </summary>
         public static string Encrypt(string text, string baseKey)
         {
@@ -94,27 +73,21 @@ namespace Ciphers
             StringBuilder result = new StringBuilder();
             int keyIndex = 0;
 
-            for (int i = 0; i < text.Length; i++)
+            foreach (char currentChar in text)
             {
-                char currentChar = text[i];
-
                 if (IsRussianLetter(currentChar))
                 {
-                    char upperChar = char.ToUpper(currentChar);
-                    int textIdx = _alphabetIndex[upperChar];
-
-                    // Прямой ключ: повторяем ключевое слово циклически
-                    char keyChar = cleanBaseKey[keyIndex % cleanBaseKey.Length];
-                    int keyIdx = _alphabetIndex[keyChar];
+                    int P = _alphabetIndex[char.ToUpper(currentChar)];              // индекс буквы текста
+                    int K = _alphabetIndex[cleanBaseKey[keyIndex % cleanBaseKey.Length]]; // индекс буквы ключа
                     keyIndex++;
 
-                    char encryptedChar = _vigenereTable[keyIdx, textIdx];
-                    result.Append(encryptedChar);
+                    int C = (P + K) % AlphabetSize;  // формула шифрования
+
+                    result.Append(RussianAlphabet[C]);
                 }
                 else
                 {
-                    // Не русская буква — оставляем как есть
-                    result.Append(currentChar);
+                    result.Append(currentChar); // пробелы, цифры — не трогаем
                 }
             }
 
@@ -122,7 +95,12 @@ namespace Ciphers
         }
 
         /// <summary>
-        /// Дешифрование методом Виженера с прямым (повторяющимся) ключом
+        /// Дешифрование методом Виженера с прямым ключом.
+        /// Формула: P = (C - K + N) mod N
+        ///   C — индекс буквы зашифрованного текста
+        ///   K — индекс буквы ключа
+        ///   N — размер алфавита (33)
+        ///   P — индекс восстановленной буквы открытого текста
         /// </summary>
         public static string Decrypt(string encryptedText, string baseKey)
         {
@@ -136,32 +114,17 @@ namespace Ciphers
             StringBuilder result = new StringBuilder();
             int keyIndex = 0;
 
-            for (int i = 0; i < encryptedText.Length; i++)
+            foreach (char currentChar in encryptedText)
             {
-                char currentChar = encryptedText[i];
-
                 if (IsRussianLetter(currentChar))
                 {
-                    // Прямой ключ: повторяем ключевое слово циклически
-                    char keyChar = cleanBaseKey[keyIndex % cleanBaseKey.Length];
-                    int keyIdx = _alphabetIndex[keyChar];
+                    int C = _alphabetIndex[char.ToUpper(currentChar)];              // индекс зашифрованной буквы
+                    int K = _alphabetIndex[cleanBaseKey[keyIndex % cleanBaseKey.Length]]; // индекс буквы ключа
                     keyIndex++;
 
-                    // Ищем в строке ключа столбец, где находится currentChar
-                    int textIdx = -1;
-                    for (int col = 0; col < RussianAlphabet.Length; col++)
-                    {
-                        if (_vigenereTable[keyIdx, col] == currentChar)
-                        {
-                            textIdx = col;
-                            break;
-                        }
-                    }
+                    int P = (C - K + AlphabetSize) % AlphabetSize;  // формула дешифрования
 
-                    if (textIdx != -1)
-                        result.Append(RussianAlphabet[textIdx]);
-                    else
-                        result.Append(currentChar);
+                    result.Append(RussianAlphabet[P]);
                 }
                 else
                 {
@@ -187,9 +150,9 @@ namespace Ciphers
             StringBuilder result = new StringBuilder();
             int keyIndex = 0;
 
-            for (int i = 0; i < text.Length; i++)
+            foreach (char c in text)
             {
-                if (IsRussianLetter(text[i]))
+                if (IsRussianLetter(c))
                 {
                     result.Append(cleanBaseKey[keyIndex % cleanBaseKey.Length]);
                     keyIndex++;
