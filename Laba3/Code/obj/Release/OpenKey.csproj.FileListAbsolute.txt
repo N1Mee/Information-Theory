@@ -1,0 +1,9 @@
+C:\Uni\ТИ\Laba3\Code\bin\Release\OpenKey.exe.config
+C:\Uni\ТИ\Laba3\Code\bin\Release\OpenKey.exe
+C:\Uni\ТИ\Laba3\Code\bin\Release\OpenKey.pdb
+C:\Uni\ТИ\Laba3\Code\obj\Release\OpenKey.csproj.AssemblyReference.cache
+C:\Uni\ТИ\Laba3\Code\obj\Release\OpenKey.fMain.resources
+C:\Uni\ТИ\Laba3\Code\obj\Release\OpenKey.csproj.GenerateResource.cache
+C:\Uni\ТИ\Laba3\Code\obj\Release\OpenKey.csproj.CoreCompileInputs.cache
+C:\Uni\ТИ\Laba3\Code\obj\Release\OpenKey.exe
+C:\Uni\ТИ\Laba3\Code\obj\Release\OpenKey.pdb
